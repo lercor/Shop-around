@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PriceHunter｜智慧商品比價</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/"><span class="brand-mark">P</span> PriceHunter</a>
+  <span class="top-tag">PRODUCT COMPARISON TOOL</span>
+</header>
+<main class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+      <div class="flash">{{ message }}</div>
+    {% endfor %}
+  {% endwith %}
+  <section class="hero">
+    <div class="eyebrow">SMARTER SHOPPING STARTS HERE</div>
+    <h1>找到好商品，<span>不必花冤枉錢。</span></h1>
+    <p class="hero-copy">輸入商品名稱、貼上商品網址，或上傳圖片，快速前往多個購物平台比價。</p>
+    <form class="search-panel" action="{{ url_for('search') }}" method="POST" enctype="multipart/form-data">
+      <label class="field-label" for="query">商品關鍵字</label>
+      <input id="query" name="query" type="text" placeholder="例如：無線藍牙耳機、黑色側背包">
+      <label class="field-label" for="product_url">商品網址 <span class="optional">選填</span></label>
+      <input id="product_url" name="product_url" type="url" placeholder="https://...">
+      <label class="field-label">商品圖片 <span class="optional">選填，最多 8MB</span></label>
+      <label class="upload-box" for="product_image">
+        <span class="upload-icon">＋</span>
+        <span><strong>點擊上傳圖片</strong><small>支援 JPG、PNG、WEBP</small></span>
+        <input id="product_image" name="product_image" type="file" accept=".jpg,.jpeg,.png,.webp">
+      </label>
+      <div id="file-name" class="file-name"></div>
+      <button class="primary-btn" type="submit">開始跨平台搜尋 <span>→</span></button>
+      <p class="form-hint">提示：圖片目前提供上傳與預覽；請搭配商品關鍵字進行跨平台搜尋。</p>
+    </form>
+  </section>
+
+  <section class="platform-section">
+    <div class="section-heading"><div><div class="eyebrow">SUPPORTED MARKETPLACES</div><h2>一次探索多個平台</h2></div><span class="muted">5 個搜尋入口</span></div>
+    <div class="platform-grid">
+      <div class="platform-card"><b class="platform-icon orange">蝦</b><div><strong>Shopee 蝦皮</strong><small>台灣購物平台</small></div></div>
+      <div class="platform-card"><b class="platform-icon brown">淘</b><div><strong>Taobao 淘寶</strong><small>中國綜合電商</small></div></div>
+      <div class="platform-card"><b class="platform-icon pink">m</b><div><strong>momo 購物網</strong><small>台灣購物平台</small></div></div>
+      <div class="platform-card"><b class="platform-icon red">天</b><div><strong>Tmall 天貓</strong><small>品牌電商平台</small></div></div>
+      <div class="platform-card"><b class="platform-icon yellow">拼</b><div><strong>Pinduoduo 拼多多</strong><small>社交電商平台</small></div></div>
+    </div>
+  </section>
+
+  {% if searches %}
+  <section class="history-section">
+    <div class="section-heading"><div><div class="eyebrow">RECENT ACTIVITY</div><h2>最近搜尋</h2></div></div>
+    <div class="history-list">
+      {% for item in searches %}
+      <div class="history-item"><span class="history-dot"></span><strong>{{ item.query }}</strong><time>{{ item.created_at }}</time></div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+  <section class="notice"><strong>Prototype 說明</strong><p>本版本會產生各購物平台的即時搜尋連結，實際商品、價格、庫存與運費以平台頁面顯示為準；尚未串接各平台官方商品 API。</p></section>
+</main>
+<footer>© 2026 PriceHunter · A product comparison prototype</footer>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
